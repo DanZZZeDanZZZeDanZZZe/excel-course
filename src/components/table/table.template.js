@@ -38,16 +38,21 @@ function createHeader(i) {
   return createCol(String.fromCharCode(i))
 }
 
-export function createTable(rowsCount = 15) {
-  // const colsCount = CODES.Z - CODES.A
-  const rows = []
-  // const cols = []
+function createColsInRange(callback) {
+  return createCols(CODES.A, CODES.Z, callback)
+}
 
-  rows.push(createRow(createCols(CODES.A, CODES.Z, createHeader)))
+function createAFilledRow(callback) {
+  return createRow(createColsInRange(callback))
+}
+
+export function createTable(rowsCount = 15) {
+  const headers = createAFilledRow(createHeader)
+  const rows = []
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(createRow(createCols(CODES.A, CODES.Z, createCell)))
+    rows.push(createAFilledRow(createCell))
   }
 
-  return rows.join('')
+  return headers + rows
 }
