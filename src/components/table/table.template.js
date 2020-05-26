@@ -5,7 +5,7 @@ const CODES = {
 
 function createCell() {
   return `
-    <div class="cell" contenteditable="">A1</div>
+    <div class="cell" contenteditable=""></div>
   `
 }
 
@@ -17,10 +17,10 @@ function createCol(simb) {
   `
 }
 
-function createRow(cols) {
+function createRow(index, cols) {
   return `
     <div class="row">
-      <div class="row-info"></div>
+      <div class="row-info">${index ? index : ''}</div>
       <div class="row-data">${cols}</div>
     </div>
   `
@@ -42,17 +42,17 @@ function createColsInRange(callback) {
   return createCols(CODES.A, CODES.Z, callback)
 }
 
-function createAFilledRow(callback) {
-  return createRow(createColsInRange(callback))
+function createAFilledRow(i, callback) {
+  return createRow(i, createColsInRange(callback))
 }
 
 export function createTable(rowsCount = 15) {
-  const headers = createAFilledRow(createHeader)
+  const headers = createAFilledRow(null, createHeader)
   const rows = []
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(createAFilledRow(createCell))
+    rows.push(createAFilledRow(i + 1, createCell))
   }
 
-  return headers + rows
+  return headers + rows.join('')
 }
