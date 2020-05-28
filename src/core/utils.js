@@ -12,7 +12,7 @@ export function createStyle(styleObj) {
       inlineStyle += ` ${getStyleName(style)}: ${styleObj[style]};`
     }
   }
-  return `style="${inlineStyle}"`
+  return inlineStyle
 }
 
 export function getStyleName(camelCaseName) {
