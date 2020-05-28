@@ -5,6 +5,18 @@ class Dom {
       selector
   }
 
+  remove() {
+    this.$el.parentNode.removeChild(this.$el)
+    return this
+  }
+
+  index() {
+    const children = this.$el.parentNode.children
+    for (const i in children) {
+      if (children[i] === this.$el) return i
+    }
+  }
+
   html(html) {
     if (typeof html === 'string') {
       this.$el.innerHTML = html
@@ -36,6 +48,10 @@ class Dom {
       this.$el.appendChild(node)
     }
     return this
+  }
+
+  get style() {
+    return this.$el.style
   }
 }
 
