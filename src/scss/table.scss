@@ -48,7 +48,7 @@
   .cell {
     min-width: 40px;
     padding: 5px;
-    width: 100%;
+    width: $cell-width;
     height: 100%;
     border: 1px solid #e2e3e3;
     border-top: 0;
