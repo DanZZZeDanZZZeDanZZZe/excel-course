@@ -50,8 +50,12 @@ class Dom {
     return this
   }
 
-  get style() {
-    return this.$el.style
+  closest(selector) {
+    return $(this.$el.closest(selector))
+  }
+
+  getCords() {
+    return this.$el.getBoundingClientRect()
   }
 }
 
