@@ -54,7 +54,7 @@ class Dom {
     return $(this.$el.closest(selector))
   }
 
-  all(selector) {
+  findAll(selector) {
     return Array.prototype.map.call(
         this.$el.querySelectorAll(selector),
         (el => {

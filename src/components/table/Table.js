@@ -25,9 +25,9 @@ export class Table extends ExcelComponent {
       if (resize === 'col') {
         const index = $parent.index()
         const $table = $resizer.closest('[data-component="table"]')
-        const $rows = $table.all('[data-component="row"]')
+        const $rows = $table.findAll('[data-component="row"]')
         $cols = $rows.map(row => {
-          return row.all('[data-component="cell"]')[index]
+          return row.findAll('[data-component="cell"]')[index]
         })
         const $resizable = [$parent, ...$cols]
 
