@@ -5,17 +5,17 @@ export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export function createStyle(styleObj) {
+export function createInlineStyles(styleObj) {
   let inlineStyle = ''
   for (const style in styleObj) {
     if (Object.prototype.hasOwnProperty.call(styleObj, style)) {
-      inlineStyle += ` ${getStyleName(style)}: ${styleObj[style]};`
+      inlineStyle += ` ${getInlineStyleName(style)}: ${styleObj[style]};`
     }
   }
   return inlineStyle
 }
 
-export function getStyleName(camelCaseName) {
+export function getInlineStyleName(camelCaseName) {
   const charCheck = (item) => {
     const lowItem = item.toLowerCase()
     return item === item.toUpperCase() ?
