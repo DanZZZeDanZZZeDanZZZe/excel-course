@@ -5,7 +5,7 @@ const CODES = {
 
 function createCell() {
   return `
-    <div class="cell" contenteditable=""></div>
+    <div class="cell" contenteditable="" data-component="cell"></div>
   `
 }
 
@@ -19,9 +19,13 @@ function createCol(simb) {
 }
 
 function createRow(index, cols) {
-  const resize = index ? '<div class="row-resize"></div>' : ''
+  const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
+  const component = index ? 'row' : 'headers'
   return `
-    <div class="row">
+    <div class="row" 
+      data-type="resizable"
+      data-component=${component}
+    >
       <div class="row-info">
         ${index ? index : ''}
         ${resize}

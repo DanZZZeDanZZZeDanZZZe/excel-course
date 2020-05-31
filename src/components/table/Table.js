@@ -7,20 +7,43 @@ export class Table extends ExcelComponent {
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown']
+      listeners: ['mousedown'],
+      data: {
+        component: 'table'
+      }
     })
   }
 
   onMousedown(event) {
     if (event.target.dataset.resize) {
+      const resize = event.target.dataset.resize
       const $resizer = $(event.target)
       const $parent = $resizer.closest('[data-type="resizable"]')
       const cords = $parent.getCords()
+      let $cols = null
 
-      document.onmousemove = e => {
-        const delta = e.pageX - cords.right
-        const value = cords.width + delta
-        $parent.$el.style.width = value + 'px'
+      if (resize === 'col') {
+        const index = $parent.index()
+        const $table = $resizer.closest('[data-component="table"]')
+        const $rows = $table.all('[data-component="row"]')
+        $cols = $rows.map(row => {
+          return row.all('[data-component="cell"]')[index]
+        })
+        const $resizable = [$parent, ...$cols]
+
+        document.onmousemove = e => {
+          const delta = e.pageX - cords.right
+          const value = cords.width + delta
+          $resizable.forEach($el => {
+            $el.$el.style.width = value + 'px'
+          })
+        }
+      } else {
+        document.onmousemove = e => {
+          const delta = e.clientY - cords.bottom
+          const value = cords.height + delta
+          $parent.$el.style.height = value + 'px'
+        }
       }
 
       document.onmouseup = () => {
@@ -33,5 +56,3 @@ export class Table extends ExcelComponent {
     return createTable()
   }
 }
-
-

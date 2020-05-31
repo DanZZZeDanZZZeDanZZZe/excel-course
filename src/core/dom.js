@@ -54,8 +54,34 @@ class Dom {
     return $(this.$el.closest(selector))
   }
 
+  all(selector) {
+    return Array.prototype.map.call(
+        this.$el.querySelectorAll(selector),
+        (el => {
+          if (el.matches(selector)) {
+            return $(el)
+          }
+        })
+    )
+  }
+
+  family(selector) {
+    return Array.prototype.map.call(
+        this.$el.parentNode.children,
+        (el => {
+          if (el.matches(selector)) {
+            return $(el)
+          }
+        })
+    )
+  }
+
   getCords() {
     return this.$el.getBoundingClientRect()
+  }
+
+  get dataset() {
+    return this.$el.dataset
   }
 }
 
