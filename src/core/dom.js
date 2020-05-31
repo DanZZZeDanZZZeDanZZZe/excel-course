@@ -83,6 +83,10 @@ class Dom {
   get dataset() {
     return this.$el.dataset
   }
+
+  get style() {
+    return this.$el.style
+  }
 }
 
 export function $(selector) {
