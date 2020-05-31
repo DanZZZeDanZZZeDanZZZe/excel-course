@@ -35,14 +35,18 @@ export class Table extends ExcelComponent {
           const delta = e.pageX - cords.right
           const value = cords.width + delta
           $resizable.forEach($el => {
-            $el.style.width = value + 'px'
+            $el.css({
+              width: value + 'px'
+            })
           })
         }
       } else {
         document.onmousemove = e => {
           const delta = e.clientY - cords.bottom
           const value = cords.height + delta
-          $parent.style.height = value + 'px'
+          $parent.css({
+            height: value + 'px'
+          })
         }
       }
 

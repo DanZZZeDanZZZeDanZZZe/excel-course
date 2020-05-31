@@ -80,11 +80,22 @@ class Dom {
     return this.$el.getBoundingClientRect()
   }
 
+  css(styles = {}) {
+    if (styles instanceof Object) {
+      for (const [name, value] of Object.entries(styles)) {
+        this.$el.style[name] = value
+      }
+      return this
+    }
+    throw new Error('argument is not an instance of class Object')
+  }
+
   get dataset() {
     return this.$el.dataset
   }
 
   get style() {
+    console.log(this.$el.style)
     return this.$el.style
   }
 }
