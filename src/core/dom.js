@@ -80,7 +80,7 @@ class Dom {
     )
   }
 
-  getCords() {
+  getCoords() {
     return this.$el.getBoundingClientRect()
   }
 

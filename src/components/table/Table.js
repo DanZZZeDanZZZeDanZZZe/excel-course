@@ -19,7 +19,7 @@ export class Table extends ExcelComponent {
       const resize = event.target.dataset.resize
       const $resizer = $(event.target)
       const $parent = $resizer.closest('[data-type="resizable"]')
-      const cords = $parent.getCords()
+      const coords = $parent.getCoords()
       let $cols = null
       let $line = null
       let value = null
@@ -43,16 +43,16 @@ export class Table extends ExcelComponent {
         })
 
         document.onmousemove = e => {
-          const sourceС = $parent.getCords().right
+          const sourceС = $parent.getCoords().right
 
-          const delta = e.pageX - cords.right
-          value = cords.width + delta
+          const delta = e.pageX - coords.right
+          value = coords.width + delta
 
           $parent.css({
             width: value + 'px'
           })
 
-          const finalC = $parent.getCords().right
+          const finalC = $parent.getCoords().right
           $line.css({
             left: e.pageX + 'px',
             opacity: sourceС === finalC ? 0 : 1
@@ -60,8 +60,8 @@ export class Table extends ExcelComponent {
         }
       } else {
         document.onmousemove = e => {
-          const delta = e.clientY - cords.bottom
-          const value = cords.height + delta
+          const delta = e.clientY - coords.bottom
+          const value = coords.height + delta
           $parent.css({
             height: value + 'px'
           })
