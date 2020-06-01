@@ -93,4 +93,14 @@
       cursor: row-resize;
     }
   }
+
+  .vertical-line {
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    width: 1px;
+    background: $primary-color;
+    z-index: 3;
+    opacity: 0;
+  }
 }

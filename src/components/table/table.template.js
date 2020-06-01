@@ -63,5 +63,9 @@ export function createTable(rowsCount = 15) {
     rows.push(createAFilledRow(i + 1, createCell))
   }
 
-  return headers + rows.join('')
+  const resizingLines = `
+    <div class="vertical-line" data-line="vertical"></div>
+  `
+
+  return resizingLines + headers + rows.join('')
 }

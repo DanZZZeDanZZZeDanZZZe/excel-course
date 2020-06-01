@@ -21,23 +21,41 @@ export class Table extends ExcelComponent {
       const $parent = $resizer.closest('[data-type="resizable"]')
       const cords = $parent.getCords()
       let $cols = null
+      let $line = null
+      let value = null
 
       if (resize === 'col') {
         const index = $parent.index()
         const $table = $resizer.closest('[data-component="table"]')
         const $rows = $table.findAll('[data-component="row"]')
+        $line = $table.find('[data-line="vertical"]')
+
+        $resizer.css({
+          opacity: '1'
+        })
+        $line.css({
+          opacity: '1',
+          left: event.clientX + 'px'
+        })
+
         $cols = $rows.map(row => {
           return row.findAll('[data-component="cell"]')[index]
         })
-        const $resizable = [$parent, ...$cols]
 
         document.onmousemove = e => {
+          const sourceС = $parent.getCords().right
+
           const delta = e.pageX - cords.right
-          const value = cords.width + delta
-          $resizable.forEach($el => {
-            $el.css({
-              width: value + 'px'
-            })
+          value = cords.width + delta
+
+          $parent.css({
+            width: value + 'px'
+          })
+
+          const finalC = $parent.getCords().right
+          $line.css({
+            left: e.pageX + 'px',
+            opacity: sourceС === finalC ? 0 : 1
           })
         }
       } else {
@@ -52,6 +70,17 @@ export class Table extends ExcelComponent {
 
       document.onmouseup = () => {
         document.onmousemove = null
+        $line.css({
+          opacity: '0'
+        })
+        $resizer.css({
+          opacity: '0'
+        })
+        $cols.forEach(item => {
+          item.css({
+            width: value + 'px'
+          })
+        })
       }
     }
   }
