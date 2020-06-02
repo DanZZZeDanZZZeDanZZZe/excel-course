@@ -110,6 +110,14 @@ class Dom {
   get width() {
     return this.$el.offsetWidth
   }
+
+  get scrollLeft() {
+    return this.$el.scrollLeft
+  }
+
+  get scrollTop() {
+    return this.$el.scrollTop
+  }
 }
 
 export function $(selector) {
