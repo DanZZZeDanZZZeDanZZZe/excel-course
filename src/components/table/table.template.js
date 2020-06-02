@@ -5,22 +5,31 @@ const CODES = {
 
 function createCell() {
   return `
-    <div class="cell" contenteditable=""></div>
+    <div class="cell" contenteditable="" data-component="cell"></div>
   `
 }
 
 function createCol(simb) {
   return `
-    <div class="column">
+    <div class="column" data-type="resizable">
       ${simb}
+      <div class="col-resize" data-resize="col"></div>
     </div>
   `
 }
 
 function createRow(index, cols) {
+  const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
+  const component = index ? 'row' : 'headers'
   return `
-    <div class="row">
-      <div class="row-info">${index ? index : ''}</div>
+    <div class="row" 
+      data-type="resizable"
+      data-component=${component}
+    >
+      <div class="row-info">
+        ${index ? index : ''}
+        ${resize}
+      </div>
       <div class="row-data">${cols}</div>
     </div>
   `
@@ -54,5 +63,10 @@ export function createTable(rowsCount = 15) {
     rows.push(createAFilledRow(i + 1, createCell))
   }
 
-  return headers + rows.join('')
+  const resizingLines = `
+    <div class="vertical-line" data-line="vertical"></div>
+    <div class="horizontal-line" data-line="horizontal"></div>
+  `
+
+  return resizingLines + headers + rows.join('')
 }
