@@ -94,13 +94,22 @@
     }
   }
 
-  .vertical-line {
+  .vertical-line, .horizontal-line {
     position: absolute;
-    bottom: 0;
-    top: 0;
-    width: 1px;
     background: $primary-color;
     z-index: 3;
     opacity: 0;
+  }
+
+  .vertical-line {
+    width: 4px;
+    bottom: 0;
+    top: 0;
+  }
+
+  .horizontal-line {
+    height: 4px;
+    right: 0;
+    left: 0;
   }
 }

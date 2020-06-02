@@ -102,6 +102,14 @@ class Dom {
     console.log(this.$el.style)
     return this.$el.style
   }
+
+  get height() {
+    return this.$el.offsetHeight
+  }
+
+  get width() {
+    return this.$el.offsetWidth
+  }
 }
 
 export function $(selector) {
