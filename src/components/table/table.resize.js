@@ -4,10 +4,10 @@ export function resizeHandler(event) {
   const $resizer = $(event.target)
   const type = $resizer.dataset.resize
 
-  const $parent = $resizer.closest('[data-type="resizable"]')
-  const $table = $resizer.closest('[data-component="table"]')
+  const $parent = $resizer.closestData('type', 'resizable')
+  const $table = $resizer.closestData('component', 'table')
   const lineType = type === 'col' ? 'vertical' : 'horizontal'
-  const $line = $table.find(`[data-line="${lineType}"]`)
+  const $line = $table.findData('line', `${lineType}`)
 
   const parentC = $parent.getCoords()
   const tableC = $table.getCoords()
@@ -21,9 +21,9 @@ export function resizeHandler(event) {
     const pos = event.pageX + $table.scrollLeft
     setMetric(pos, 'left', $line)
     const index = $parent.index()
-    const $rows = $table.findAll('[data-component="row"]')
+    const $rows = $table.findAllData('component', 'row')
     $cols = $rows.map(row => {
-      return row.findAll('[data-component="cell"]')[index]
+      return row.findAllData('component', 'cell')[index]
     })
   } else {
     const pos = event.pageY - window.pageYOffset - tableC.top

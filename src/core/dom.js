@@ -69,6 +69,24 @@ class Dom {
     return $(this.$el.querySelector(selector))
   }
 
+  findData(name, value) {
+    return $(
+        this.$el.find(`[data-${name}="${value}"]`)
+    )
+  }
+
+  findAllData(name, value) {
+    return $(
+        this.$el.findAll(`[data-${name}="${value}"]`)
+    )
+  }
+
+  closestData(name, value) {
+    return $(
+        this.$el.closest(`[data-${name}="${value}"]`)
+    )
+  }
+
   family(selector) {
     return Array.prototype.map.call(
         this.$el.parentNode.children,
@@ -92,6 +110,14 @@ class Dom {
       return this
     }
     throw new Error('argument is not an instance of class Object')
+  }
+
+  addClass(className) {
+    this.$el.classList.add(className)
+  }
+
+  removeClass(className) {
+    this.$el.classList.remove(className)
   }
 
   get dataset() {
