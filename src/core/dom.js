@@ -70,21 +70,18 @@ class Dom {
   }
 
   findData(name, value) {
-    return $(
-        this.$el.find(`[data-${name}="${value}"]`)
-    )
+    return $(this.$el)
+        .find(`[data-${name}="${value}"]`)
   }
 
   findAllData(name, value) {
-    return $(
-        this.$el.findAll(`[data-${name}="${value}"]`)
-    )
+    return $(this.$el)
+        .findAll(`[data-${name}="${value}"]`)
   }
 
   closestData(name, value) {
-    return $(
-        this.$el.closest(`[data-${name}="${value}"]`)
-    )
+    return $(this.$el)
+        .closest(`[data-${name}="${value}"]`)
   }
 
   family(selector) {
