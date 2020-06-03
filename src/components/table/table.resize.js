@@ -1,4 +1,5 @@
 import {$} from '@core/dom'
+import {setStyle} from '../../core/utils'
 
 export function resizeHandler(event) {
   const $resizer = $(event.target)
@@ -57,22 +58,14 @@ export function resizeHandler(event) {
 }
 
 function elVisibility(vis, ...els) {
-  const o = vis === null ? '' : +vis
-  els.forEach(el => {
-    el.css({
-      opacity: o
-    })
-  })
+  vis = vis === null ? '' : +vis
+  setStyle(vis, 'opacity', ...els)
 }
 
 function setMetric(rule, side, ...els) {
   rule = rule instanceof Function ? rule() : rule
-
-  els.forEach(el => {
-    el.css({
-      [side]: `${rule}px`
-    })
-  })
+  rule = rule + 'px'
+  setStyle(rule, side, ...els)
 }
 
 
