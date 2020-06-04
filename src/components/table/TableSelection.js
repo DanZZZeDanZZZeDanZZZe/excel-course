@@ -1,4 +1,4 @@
-import {isCell} from './table.functions'
+import {isCell, isCellSelector} from './table.functions'
 import {$} from '@core/dom'
 
 class TableSelection {
@@ -29,15 +29,15 @@ class TableSelection {
 }
 
 class AreaControl extends TableSelection {
-  constructor(event) {
-    super(event.target)
+  constructor(target) {
+    super(target)
     const {x, y, height, width} = this.coords.current
     const coords = this._getRlativeCords(x, y)
     this.areaRect = {...coords, height, width}
   }
 
-  changeArea(event) {
-    this.changeCurrentEl(event.target)
+  changeArea(target) {
+    this.changeCurrentEl(target)
     this.setSize()
     // if (this.coords.previous.x !== this.coords.current.x) {
     //   this.setWidth()
@@ -100,15 +100,15 @@ class AreaControl extends TableSelection {
 }
 
 class SelectorControl extends AreaControl {
-  constructor(event) {
-    super(event)
+  constructor(target) {
+    super(target)
     this.$selector = this.$table.findData('selector', 'cell')
     this.setPoint()
     this.updateSize()
   }
 
-  changeSelector(event) {
-    this.changeArea(event)
+  changeSelector(target) {
+    this.changeArea(target)
     this.updateSize()
   }
 
@@ -150,12 +150,12 @@ class SelectorControl extends AreaControl {
 }
 
 export function createSelection(event) {
-  const tableSelection = new SelectorControl(event)
+  const tableSelection = new SelectorControl(event.target)
 
   document.onmousemove = e => {
-    if (isCell(e) && tableSelection.$current.$el !== e.target ) {
-      tableSelection.changeSelector(e)
-      console.log(tableSelection)
+    if (tableSelection.$current.$el !== e.target ) {
+      if (isCell(e)) tableSelection.changeSelector(e.target)
+      if (isCellSelector(e)) console.log('i am selector')
     }
   }
 
