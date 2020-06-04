@@ -63,10 +63,11 @@ export function createTable(rowsCount = 15) {
     rows.push(createAFilledRow(i + 1, createCell))
   }
 
-  const resizingLines = `
+  const logicEls = `
     <div class="vertical-line" data-line="vertical"></div>
     <div class="horizontal-line" data-line="horizontal"></div>
+    <div class="cell-selector" data-selector="cell"></div>
   `
 
-  return resizingLines + headers + rows.join('')
+  return logicEls + headers + rows.join('')
 }

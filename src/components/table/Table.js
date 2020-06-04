@@ -1,7 +1,8 @@
 import {ExcelComponent} from '@core/ExcelComponent'
 import {createTable} from './table.template'
 import {resizeHandler} from './table.resize'
-import {shouldResize} from './table.functions'
+import {shouldResize, isCell} from './table.functions'
+import {createSelection} from './TableSelection'
 
 
 export class Table extends ExcelComponent {
@@ -19,6 +20,9 @@ export class Table extends ExcelComponent {
   onMousedown(event) {
     if (shouldResize(event)) {
       resizeHandler(event)
+    }
+    if (isCell(event)) {
+      this.selection = createSelection(event)
     }
   }
 
