@@ -3,24 +3,35 @@ import {$} from '@core/dom'
 
 class TableSelection {
   constructor(target) {
-    this.$currentEl = $(target)
-    this.currentElCoords = $(target).getCoords()
-    this.previousElCoords = this.currentElCoords
-    this.$table = this.$currentEl.closestData('component', 'table')
+    this.$current = $(target)
+    const c = $(target).getCoords()
+
+    this.coords = {
+      current: c,
+      start: c,
+    }
+
+    this.$table = this.$current.closestData('component', 'table')
     this.tableCoords = this.$table.getCoords()
   }
 
   changeCurrentEl(target) {
-    this.$currentEl = $(target)
-    this.previousElCoords = this.currentElCoords
-    this.currentElCoords = $(target).getCoords()
+    this.$current = $(target)
+    const c = $(target).getCoords()
+    const {current, start} = this.coords
+
+    this.coords = {
+      current: c,
+      previous: current,
+      start
+    }
   }
 }
 
 class AreaControl extends TableSelection {
   constructor(event) {
     super(event.target)
-    const {x, y, height, width} = this.currentElCoords
+    const {x, y, height, width} = this.coords.current
     const coords = this._getRlativeCords(x, y)
     this.areaRect = {...coords, height, width}
   }
@@ -28,7 +39,7 @@ class AreaControl extends TableSelection {
   changeArea(event) {
     this.changeCurrentEl(event.target)
     this.setSize()
-    // if (this.previousElCoords.x !== this.currentElCoords.x) {
+    // if (this.coords.previous.x !== this.coords.current.x) {
     //   this.setWidth()
     // } else {
     //   this.setHeight()
@@ -45,19 +56,19 @@ class AreaControl extends TableSelection {
       mod = mod ? 1 : -1
       this.areaRect = {
         ...this.areaRect,
-        height: this.areaRect.height + mod * this.currentElCoords.height
+        height: this.areaRect.height + mod * this.coords.current.height
       }
     }
 
-    const start = this.previousElCoords.y
-    const current = this.currentElCoords.y
+    const start = this.coords.previous.y
+    const current = this.coords.current.y
 
     if (start < current) calculate(true)
     if (start > current) calculate(false)
 
     // this.areaRect = {
     //   ...this.areaRect,
-    //   height: this.areaRect.height + this.currentElCoords.height
+    //   height: this.areaRect.height + this.coords.current.height
     // }
   }
 
@@ -66,18 +77,18 @@ class AreaControl extends TableSelection {
       mod = mod ? 1 : -1
       this.areaRect = {
         ...this.areaRect,
-        width: this.areaRect.width + this.currentElCoords.width
+        width: this.areaRect.width + this.coords.current.width
       }
     }
 
-    const start = this.previousElCoords.x
-    const current = this.currentElCoords.x
+    const start = this.coords.previous.x
+    const current = this.coords.current.x
 
     if (start < current) calculate(true)
     if (start > current) calculate(false)
     // this.areaRect = {
     //   ...this.areaRect,
-    //   width: this.areaRect.width + this.currentElCoords.width
+    //   width: this.areaRect.width + this.coords.current.width
     // }
   }
 
@@ -142,7 +153,7 @@ export function createSelection(event) {
   const tableSelection = new SelectorControl(event)
 
   document.onmousemove = e => {
-    if (isCell(e) && tableSelection.$currentEl.$el !== e.target ) {
+    if (isCell(e) && tableSelection.$current.$el !== e.target ) {
       tableSelection.changeSelector(e)
       console.log(tableSelection)
     }
