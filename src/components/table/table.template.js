@@ -66,7 +66,6 @@ export function createTable(rowsCount = 15) {
   const logicEls = `
     <div class="vertical-line" data-line="vertical"></div>
     <div class="horizontal-line" data-line="horizontal"></div>
-    <div class="cell-selector" data-selector="cell"></div>
   `
 
   return logicEls + headers + rows.join('')

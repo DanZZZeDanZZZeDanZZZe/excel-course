@@ -1,161 +1,78 @@
-import {isCell, isCellSelector} from './table.functions'
+import {isCell} from './table.functions'
 import {$} from '@core/dom'
 
 class TableSelection {
+  els = {
+    start: null,
+    end: null
+  }
+
   constructor(target) {
-    this.$current = $(target)
-    const c = $(target).getCoords()
-
-    this.coords = {
-      current: c,
-      start: c,
-    }
-
-    this.$table = this.$current.closestData('component', 'table')
-    this.tableCoords = this.$table.getCoords()
+    this.select(target)
   }
 
-  changeCurrentEl(target) {
-    this.$current = $(target)
-    const c = $(target).getCoords()
-    const {current, start} = this.coords
-
-    this.coords = {
-      current: c,
-      previous: current,
-      start
-    }
-  }
-}
-
-class AreaControl extends TableSelection {
-  constructor(target) {
-    super(target)
-    const {x, y, height, width} = this.coords.current
-    const coords = this._getRlativeCords(x, y)
-    this.areaRect = {...coords, height, width}
-  }
-
-  changeArea(target) {
-    this.changeCurrentEl(target)
-    this.setSize()
-    // if (this.coords.previous.x !== this.coords.current.x) {
-    //   this.setWidth()
-    // } else {
-    //   this.setHeight()
-    // }
-  }
-
-  setSize() {
-    this.setHeight()
-    this.setWidth()
-  }
-
-  setHeight() {
-    const calculate = (mod) => {
-      mod = mod ? 1 : -1
-      this.areaRect = {
-        ...this.areaRect,
-        height: this.areaRect.height + mod * this.coords.current.height
+  select(target) {
+    const calculate = () => {
+      this.group = false
+      this.els = {
+        start: {
+          $el: $(target),
+          coords: $(target).getCoords()
+        },
+        end: null
       }
+      console.log('no group')
+      this.els.start.$el.addClass('selected')
     }
 
-    const start = this.coords.previous.y
-    const current = this.coords.current.y
-
-    if (start < current) calculate(true)
-    if (start > current) calculate(false)
-
-    // this.areaRect = {
-    //   ...this.areaRect,
-    //   height: this.areaRect.height + this.coords.current.height
-    // }
+    if (!this.$end && !this.$start) {
+      calculate()
+    }
   }
 
-  setWidth() {
-    const calculate = (mod) => {
-      mod = mod ? 1 : -1
-      this.areaRect = {
-        ...this.areaRect,
-        width: this.areaRect.width + this.coords.current.width
+  selectGroup(target) {
+    if (target !== this.els.end?.$el?.getEl()) {
+      this.group = true
+      this.els = {
+        ...this.els,
+        end: {
+          $el: $(target),
+          coords: $(target).getCoords()
+        }
       }
+      console.log('group')
     }
-
-    const start = this.coords.previous.x
-    const current = this.coords.current.x
-
-    if (start < current) calculate(true)
-    if (start > current) calculate(false)
-    // this.areaRect = {
-    //   ...this.areaRect,
-    //   width: this.areaRect.width + this.coords.current.width
-    // }
-  }
-
-  _getRlativeCords(x, y) {
-    y = y - this.tableCoords.top
-    x = x + this.$table.scrollLeft
-    return {x, y}
-  }
-}
-
-class SelectorControl extends AreaControl {
-  constructor(target) {
-    super(target)
-    this.$selector = this.$table.findData('selector', 'cell')
-    this.setPoint()
-    this.updateSize()
-  }
-
-  changeSelector(target) {
-    this.changeArea(target)
-    this.updateSize()
-  }
-
-  setPoint() {
-    const {x, y} = this.areaRect
-    this.$selector.css({
-      left: `${x}px`,
-      top: `${y}px`
-    })
-  }
-
-  updateSize() {
-    this.updateHeight()
-    this.updateWidth()
-  }
-
-  updateHeight() {
-    const {height} = this.areaRect
-    this.$selector.css({
-      height: `${height}px`
-    })
-  }
-
-  updateWidth() {
-    const {width} = this.areaRect
-    this.$selector.css({
-      width: `${width}px`,
-    })
   }
 
   clear() {
-    this.$selector.css({
-      width: null,
-      height: null,
-      left: null,
-      top: null
-    })
+    if (!this.group) {
+      this.els.start.$el.removeClass('selected')
+    }
+    this.els = {
+      start: null,
+      end: null
+    }
+  }
+
+  get $start() {
+    return this.els.start?.$el
+  }
+
+  get $end() {
+    return this.els.end?.$el
   }
 }
 
 export function createSelection(event) {
-  const tableSelection = new SelectorControl(event.target)
+  const tableSelection = new TableSelection(event.target)
 
   document.onmousemove = e => {
-    if (tableSelection.$current.$el !== e.target ) {
-      if (isCell(e)) tableSelection.changeSelector(e.target)
-      if (isCellSelector(e)) console.log('i am selector')
+    if (isCell(e)) {
+      if (tableSelection.$start.getEl() !== e.target) {
+        tableSelection.selectGroup(e.target)
+      } else {
+        tableSelection.select(e.target)
+      }
     }
   }
 

@@ -56,11 +56,11 @@
     color: #111;
     white-space: nowrap;
     outline: none;
-  }
 
-  .cell-selector {
-    position: absolute;
-    outline: 2px solid $primary-color;
+    &.selected {
+      border: none;
+      outline: 2px solid $primary-color;
+    }
   }
 
   .col-resize, .row-resize {

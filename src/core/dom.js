@@ -141,6 +141,10 @@ class Dom {
   get scrollTop() {
     return this.$el.scrollTop
   }
+
+  getEl() {
+    return this.$el
+  }
 }
 
 export function $(selector) {

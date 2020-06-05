@@ -22,6 +22,9 @@ export class Table extends ExcelComponent {
       resizeHandler(event)
     }
     if (isCell(event)) {
+      if (this.selection) {
+        this.selection.clear()
+      }
       this.selection = createSelection(event)
     }
   }
