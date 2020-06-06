@@ -44,13 +44,13 @@ function createRow(index, cols) {
 function createCols(codeStart, codeEnd, callback) {
   const cols = []
   for (let j = 0; j <= codeEnd - codeStart; j++) {
-    cols.push(callback(j))
+    cols.push(callback(j, codeStart))
   }
   return cols.join('')
 }
 
-function createHeader(i) {
-  return createCol(String.fromCharCode(i))
+function createHeader(i, code) {
+  return createCol(String.fromCharCode(i + code))
 }
 
 function createColsInRange(callback) {

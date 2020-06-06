@@ -10,7 +10,10 @@ export class ExcelComponent extends DomListener {
       })
     }
     this.name = options.name
+    this.prepare()
   }
+
+  prepare() {}
 
   toHTML() {
     return ''

@@ -1,103 +1,56 @@
-import {isCell} from './table.functions'
-import {$} from '@core/dom'
+export class TableSelection {
+  static className = 'selected'
 
-class TableSelection {
-  els = {
-    start: null,
-    end: null
+  constructor() {
+    this.group = []
   }
 
-  constructor(target) {
-    this.select(target)
+  select($el) {
+    this.clear()
+    this.group.push($el)
+    $el.addClass(TableSelection.className)
   }
 
-  select(target) {
-    const calculate = () => {
-      this.group = false
-      this.els = {
-        start: {
-          $el: $(target),
-          coords: $(target).getCoords()
-        },
-        end: null
-      }
-      console.log('no group')
-      this.els.start.$el.addClass('selected')
+  selectGroup($el) {
+    const $startEl = this.group[0]
+    const table = $startEl.closestData('component', 'table')
+    const [startY, startX]= getIndexes($startEl)
+    const [endY, endX] = getIndexes($el)
+    this.clear()
+
+    const push = (i, j) => {
+      const $el = table.findData('id', `${i}:${j}`)
+      $el.addClass(TableSelection.className)
+      this.group.push($el)
     }
 
-    if (!this.$end && !this.$start) {
-      calculate()
+    const getRange = (start, end) => {
+      return start < end ?
+          [start, end] :
+          [end, start]
     }
-  }
 
-  selectGroup(target) {
-    if (target !== this.els.end?.$el?.getEl()) {
-      this.group = true
-      this.els = {
-        ...this.els,
-        end: {
-          $el: $(target),
-          coords: $(target).getCoords()
-        }
+    const fillRow = (i) => {
+      const [start, end] = getRange(startX, endX)
+      for (let j = start; j <= end; j++) {
+        push(i, j)
       }
-      console.log('group')
+    }
+
+    const [start, end] = getRange(startY, endY)
+    for (let i = start; i <= end; i++) {
+      fillRow(i)
     }
   }
 
   clear() {
-    if (!this.group) {
-      this.els.start.$el.removeClass('selected')
-    }
-    this.els = {
-      start: null,
-      end: null
-    }
-  }
-
-  get $start() {
-    return this.els.start?.$el
-  }
-
-  get $end() {
-    return this.els.end?.$el
+    this.group.forEach(it => it.removeClass(TableSelection.className))
+    this.group = []
   }
 }
 
-export function createSelection(event) {
-  const tableSelection = new TableSelection(event.target)
-
-  document.onmousemove = e => {
-    if (isCell(e)) {
-      if (tableSelection.$start.getEl() !== e.target) {
-        tableSelection.selectGroup(e.target)
-      } else {
-        tableSelection.select(e.target)
-      }
-    }
-  }
-
-  document.onmouseup = e => {
-    document.onmouseup = null
-    document.onmousemove = null
-  }
-
-  const onkeyupCheck = (key, keyName) => {
-    const callback = () => tableSelection.clear()
-    return keyCheck(callback, 'onkeyup', key, keyName)
-  }
-
-  new Promise(resolve => {
-    document.onkeydown = event => resolve(event.key)
-  })
-      .then(key => onkeyupCheck('Escape', key))
-
-  return tableSelection
-}
-
-function keyCheck(callback, eventName, key, keyName) {
-  if (key !== keyName) {
-    return key
-  }
-  document[eventName] = null
-  callback()
+function getIndexes($el) {
+  return $el.dataset.id
+      .split(':')
+      .map(it => +it)
 }
