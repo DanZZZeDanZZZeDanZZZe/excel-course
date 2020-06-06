@@ -48,7 +48,7 @@ export function resizeHandler(event) {
 
     elVisibility(null, $resizer, $line)
     if (type === 'col') {
-      const pos = e.pageX - $table.scrollLeft - parentC.left
+      const pos = e.pageX - parentC.left
       setMetric(pos, 'width', $parent, ...$cols)
     } else {
       const pos = e.pageY - window.pageYOffset - parentC.top
