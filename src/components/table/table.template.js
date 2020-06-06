@@ -3,9 +3,15 @@ const CODES = {
   Z: 90
 }
 
-function createCell() {
+function createCell(row, col) {
   return `
-    <div class="cell" contenteditable="" data-component="cell"></div>
+    <div 
+      class="cell" 
+      contenteditable="" 
+      data-component="cell"
+      data-id=${row}:${col}
+    >
+    </div>
   `
 }
 
@@ -37,8 +43,8 @@ function createRow(index, cols) {
 
 function createCols(codeStart, codeEnd, callback) {
   const cols = []
-  for (let i = codeStart; i <= codeEnd; i++) {
-    cols.push(callback(i))
+  for (let j = 0; j <= codeEnd - codeStart; j++) {
+    cols.push(callback(j))
   }
   return cols.join('')
 }
@@ -60,7 +66,7 @@ export function createTable(rowsCount = 15) {
   const rows = []
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(createAFilledRow(i + 1, createCell))
+    rows.push(createAFilledRow(i + 1, createCell.bind(null, i)))
   }
 
   const logicEls = `
