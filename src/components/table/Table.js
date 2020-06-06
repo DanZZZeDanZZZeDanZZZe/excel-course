@@ -1,7 +1,7 @@
 import {ExcelComponent} from '@core/ExcelComponent'
 import {createTable} from './table.template'
 import {resizeHandler} from './table.resize'
-import {shouldResize, isCell} from './table.functions'
+import {shouldResize, isCell, nextSelector} from './table.functions'
 import {TableSelection} from './TableSelection'
 import {$} from '@core/dom'
 
@@ -10,7 +10,7 @@ export class Table extends ExcelComponent {
 
   constructor($root) {
     super($root, {
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown'],
       data: {
         component: 'table'
       }
@@ -31,6 +31,15 @@ export class Table extends ExcelComponent {
         this.selection.select($target)
       }
     }
+  }
+
+  onKeydown(event) {
+    const id = this.selection.$current.id()
+
+    const {key} = event
+
+    const {row, col} = nextSelector(id, key)
+    this.selection.selectById(row, col)
   }
 
   prepare() {

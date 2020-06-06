@@ -117,6 +117,27 @@ class Dom {
     this.$el.classList.remove(className)
   }
 
+  id(row, col) {
+    if (!row && !col) {
+      const arr = this.$el.dataset.id
+          .split(':')
+      return {
+        row: +arr[0],
+        col: +arr[1]
+      }
+    }
+    const {currnetRow, currnetCol} = this.$el.id()
+    row = !row ? currnetRow : row
+    col = !col ? currnetCol : col
+    this.$el.dataset.id = row + ':' + col
+    return this
+  }
+
+  focus() {
+    this.$el.focus()
+    return this
+  }
+
   get dataset() {
     return this.$el.dataset
   }

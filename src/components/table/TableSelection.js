@@ -3,23 +3,30 @@ export class TableSelection {
 
   constructor() {
     this.group = []
+    this.$current = null
   }
 
   select($el) {
     this.clear()
+    this.$current = $el
+    this.table = this.$current.closestData('component', 'table')
     this.group.push($el)
-    $el.addClass(TableSelection.className)
+    $el.focus().addClass(TableSelection.className)
+  }
+
+  selectById(row, col) {
+    const $el = this.table.findData('id', `${row}:${col}`)
+    this.select($el)
   }
 
   selectGroup($el) {
-    const $startEl = this.group[0]
-    const table = $startEl.closestData('component', 'table')
-    const [startY, startX]= getIndexes($startEl)
-    const [endY, endX] = getIndexes($el)
     this.clear()
 
+    const [startY, startX] = getIndexes(this.$current)
+    const [endY, endX] = getIndexes($el)
+
     const push = (i, j) => {
-      const $el = table.findData('id', `${i}:${j}`)
+      const $el = this.table.findData('id', `${i}:${j}`)
       $el.addClass(TableSelection.className)
       this.group.push($el)
     }
