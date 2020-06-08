@@ -9,7 +9,10 @@ export class ExcelComponent extends DomListener {
         this.$root.dataset[name] = value
       })
     }
+
     this.name = options.name
+    this.emitter = options.emitter
+
     this.prepare()
   }
 
