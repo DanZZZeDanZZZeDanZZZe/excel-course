@@ -37,9 +37,10 @@ export class Table extends ExcelComponent {
     const id = this.selection.$current.id()
 
     const {key} = event
-
     const {row, col} = nextSelector(id, key)
-    this.selection.selectById(row, col)
+    if (row || col) {
+      this.selection.selectById(row, col)
+    }
   }
 
   prepare() {

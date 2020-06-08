@@ -38,4 +38,5 @@ export function nextSelector({row, col}, key) {
 
     return {row, col}
   }
+  return false
 }
