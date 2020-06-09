@@ -40,4 +40,9 @@ export class ExcelComponent extends DomListener {
     this.removeDOMListeners()
     this.unsubscribers.forEach(unsub => unsub())
   }
+
+  $component(name, parent) {
+    parent = parent || this.$root
+    return parent.findData('component', name)
+  }
 }

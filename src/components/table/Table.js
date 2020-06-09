@@ -3,7 +3,7 @@ import {createTable} from './table.template'
 import {resizeHandler} from './table.resize'
 import {shouldResize, isCell, nextSelector} from './table.functions'
 import {TableSelection} from './TableSelection'
-import {$} from '@core/dom'
+import {$, Dom} from '@core/dom'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
@@ -11,7 +11,7 @@ export class Table extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: 'Table',
-      listeners: ['mousedown', 'keydown'],
+      listeners: ['mousedown', 'keydown', 'input'],
       data: {
         component: 'table'
       },
@@ -30,7 +30,7 @@ export class Table extends ExcelComponent {
       if (event.shiftKey) {
         this.selection.selectGroup($target)
       } else {
-        this.selection.select($target)
+        this.selectCell($target)
       }
     }
   }
@@ -40,8 +40,10 @@ export class Table extends ExcelComponent {
 
     const {key} = event
     const {row, col} = nextSelector(id, key)
-    if (row || col) {
-      this.selection.selectById(row, col)
+
+    if (row >= 0 || col >= 0) {
+      this.selectCell({row, col})
+      this.$emit('table:select', this.selection.$current)
     }
   }
 
@@ -51,15 +53,33 @@ export class Table extends ExcelComponent {
 
   init() {
     super.init()
-    const $cell = this.$root.findData('id', '0:0')
-    this.selection.select($cell)
 
+    const $cell = this.$root.findData('id', '0:0')
+
+    this.selectCell($cell)
     this.$on('formula:input', text => {
       this.selection.$current.text(text)
     })
+    this.$on('formula:enter', () => {
+      this.selection.$current.focus()
+    })
+  }
+
+  selectCell($cell) {
+    if ($cell instanceof Dom) {
+      this.selection.select($cell)
+    } else {
+      const {row, col} = $cell
+      this.selection.selectById(row, col)
+    }
+    this.$emit('table:input', this.selection.$current)
   }
 
   toHTML() {
     return createTable()
+  }
+
+  onInput(event) {
+    this.$emit('table:input', $(event.target))
   }
 }
