@@ -1,4 +1,4 @@
-class Dom {
+export class Dom {
   constructor(selector) {
     this.$el = typeof selector === 'string' ?
       document.querySelector(selector) :
@@ -28,6 +28,17 @@ class Dom {
   clear() {
     this.html('')
     return this
+  }
+
+  text(text) {
+    if (typeof text === 'string') {
+      this.$el.textContent = text
+      return this
+    }
+    if (this.$el.tagName.toLowerCase() === 'input') {
+      return this.$el.value.trim()
+    }
+    return this.$el.textContent.trim()
   }
 
   on(eventType, callback) {
@@ -69,6 +80,21 @@ class Dom {
     return $(this.$el.querySelector(selector))
   }
 
+  findData(name, value) {
+    return $(this.$el)
+        .find(`[data-${name}="${value}"]`)
+  }
+
+  findAllData(name, value) {
+    return $(this.$el)
+        .findAll(`[data-${name}="${value}"]`)
+  }
+
+  closestData(name, value) {
+    return $(this.$el)
+        .closest(`[data-${name}="${value}"]`)
+  }
+
   family(selector) {
     return Array.prototype.map.call(
         this.$el.parentNode.children,
@@ -94,6 +120,37 @@ class Dom {
     throw new Error('argument is not an instance of class Object')
   }
 
+  addClass(className) {
+    this.$el.classList.add(className)
+    return this
+  }
+
+  removeClass(className) {
+    this.$el.classList.remove(className)
+    return this
+  }
+
+  id(row, col) {
+    if (!row && !col) {
+      const arr = this.$el.dataset.id
+          .split(':')
+      return {
+        row: +arr[0],
+        col: +arr[1]
+      }
+    }
+    const {currnetRow, currnetCol} = this.$el.id()
+    row = !row ? currnetRow : row
+    col = !col ? currnetCol : col
+    this.$el.dataset.id = row + ':' + col
+    return this
+  }
+
+  focus() {
+    this.$el.focus()
+    return this
+  }
+
   get dataset() {
     return this.$el.dataset
   }
@@ -117,6 +174,10 @@ class Dom {
 
   get scrollTop() {
     return this.$el.scrollTop
+  }
+
+  getEl() {
+    return this.$el
   }
 }
 

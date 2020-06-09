@@ -3,9 +3,15 @@ const CODES = {
   Z: 90
 }
 
-function createCell() {
+function createCell(row, col) {
   return `
-    <div class="cell" contenteditable="" data-component="cell"></div>
+    <div 
+      class="cell" 
+      contenteditable="" 
+      data-component="cell"
+      data-id=${row}:${col}
+    >
+    </div>
   `
 }
 
@@ -37,14 +43,14 @@ function createRow(index, cols) {
 
 function createCols(codeStart, codeEnd, callback) {
   const cols = []
-  for (let i = codeStart; i <= codeEnd; i++) {
-    cols.push(callback(i))
+  for (let j = 0; j <= codeEnd - codeStart; j++) {
+    cols.push(callback(j, codeStart))
   }
   return cols.join('')
 }
 
-function createHeader(i) {
-  return createCol(String.fromCharCode(i))
+function createHeader(i, code) {
+  return createCol(String.fromCharCode(i + code))
 }
 
 function createColsInRange(callback) {
@@ -60,13 +66,13 @@ export function createTable(rowsCount = 15) {
   const rows = []
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(createAFilledRow(i + 1, createCell))
+    rows.push(createAFilledRow(i + 1, createCell.bind(null, i)))
   }
 
-  const resizingLines = `
+  const logicEls = `
     <div class="vertical-line" data-line="vertical"></div>
     <div class="horizontal-line" data-line="horizontal"></div>
   `
 
-  return resizingLines + headers + rows.join('')
+  return logicEls + headers + rows.join('')
 }

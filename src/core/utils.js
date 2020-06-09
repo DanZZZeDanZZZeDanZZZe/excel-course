@@ -29,3 +29,15 @@ export function getInlineStyleName(camelCaseName) {
       .map(charCheck)
       .join('')
 }
+
+export function setStyle(value, style, ...els) {
+  value = value instanceof Function ? value() : value
+
+  els.forEach(el => {
+    el.css({
+      [style]: `${value}`
+    })
+  })
+}
+
+

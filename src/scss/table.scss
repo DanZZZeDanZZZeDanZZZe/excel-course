@@ -58,9 +58,9 @@
     outline: none;
 
     &.selected {
+      z-index: 3;
       border: none;
       outline: 2px solid $primary-color;
-      z-index: 2;
     }
   }
 
