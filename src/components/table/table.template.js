@@ -30,17 +30,18 @@ function createCol(index, simb) {
 }
 
 function createRow(index, cols) {
-  const num = index + 1
-  const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
-  const component = index ? 'row' : 'headers'
+  const isRow = index !== null
+  const resize = isRow ? '<div class="row-resize" data-resize="row"></div>' : ''
+  const component = isRow ? 'row' : 'headers'
+
   return `
     <div class="row" 
       data-type="resizable"
       data-component=${component}
-      data-row=${index}
+      ${isRow ? 'data-row='+ index : ''}
     >
       <div class="row-info">
-        ${index ? num : ''}
+        ${isRow ? index + 1 : ''}
         ${resize}
       </div>
       <div class="row-data">${cols}</div>
