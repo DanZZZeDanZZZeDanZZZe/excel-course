@@ -15,25 +15,32 @@ function createCell(row, col) {
   `
 }
 
-function createCol(simb) {
+function createCol(index, simb) {
   return `
-    <div class="column" data-type="resizable">
+    <div 
+      class="column" 
+      data-type="resizable"
+      data-col=${index}
+    >
       ${simb}
-      <div class="col-resize" data-resize="col"></div>
+      <div 
+        class="col-resize" data-resize="col"></div>
     </div>
   `
 }
 
 function createRow(index, cols) {
+  const num = index + 1
   const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
   const component = index ? 'row' : 'headers'
   return `
     <div class="row" 
       data-type="resizable"
       data-component=${component}
+      data-row=${index}
     >
       <div class="row-info">
-        ${index ? index : ''}
+        ${index ? num : ''}
         ${resize}
       </div>
       <div class="row-data">${cols}</div>
@@ -50,7 +57,7 @@ function createCols(codeStart, codeEnd, callback) {
 }
 
 function createHeader(i, code) {
-  return createCol(String.fromCharCode(i + code))
+  return createCol(i, String.fromCharCode(i + code))
 }
 
 function createColsInRange(callback) {
@@ -66,7 +73,7 @@ export function createTable(rowsCount = 15) {
   const rows = []
 
   for (let i = 0; i < rowsCount; i++) {
-    rows.push(createAFilledRow(i + 1, createCell.bind(null, i)))
+    rows.push(createAFilledRow(i, createCell.bind(null, i)))
   }
 
   const logicEls = `
