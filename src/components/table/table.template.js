@@ -40,12 +40,13 @@ function createHeader(index, params) {
 }
 
 function createElement(index, col, data) {
+  console.log('createElement -> data', data)
+
   const width = data.colState[col]
 
-  let style = createInlineStyles({
-    width: width ? `${width}px` : null
+  const style = createInlineStyles({
+    width: width ? `${width}px` : null,
   })
-  if (style !== '') style = `style="${style}"`
 
   const params = {style}
   return index ?
@@ -63,11 +64,18 @@ function createRow(index, colsCount, data) {
       .map((el, colIndex) => createElement(index, colIndex, data))
       .join('')
 
+  const height = data.rowState[index]
+
+  const style = createInlineStyles({
+    height: height ? `${height}px` : null
+  })
+
   return `
     <div class="row" 
       data-type="resizable"
       data-component=${component}
       ${isRow ? 'data-row='+ index : ''}
+      ${style}
     >
       <div class="row-info">
         ${isRow ? index: ''}

@@ -1,8 +1,8 @@
-import {TABLE_RESIZE} from './types';
+import {COL_RESIZE, ROW_RESIZE} from './types';
 
 export function tableResize(data) {
   return {
-    type: TABLE_RESIZE,
+    type: data.el === 'col' ? COL_RESIZE : ROW_RESIZE,
     data
   }
 }

@@ -58,7 +58,8 @@ export function resizeHandler(event) {
       }
       resolve({
         value: pos,
-        id: type === 'col' ? $parent.dataset.col : null
+        id: type === 'col' ? $parent.dataset.col : $parent.dataset.row,
+        el: type
       })
     }
   })
