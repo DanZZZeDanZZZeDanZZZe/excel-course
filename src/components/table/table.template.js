@@ -74,7 +74,7 @@ function createRow(index, colsCount, data) {
     <div class="row" 
       data-type="resizable"
       data-component=${component}
-      ${isRow ? 'data-row='+ index : ''}
+      ${isRow ? 'data-row=' + index : ''}
       ${style}
     >
       <div class="row-info">
