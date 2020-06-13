@@ -65,7 +65,6 @@ export class Table extends ExcelComponent {
     super.init()
 
     const $cell = this.$root.findData('id', '0:0')
-
     this.selectCell($cell)
     this.$on('formula:input', text => {
       this.selection.$current.text(text)
@@ -89,7 +88,7 @@ export class Table extends ExcelComponent {
   }
 
   toHTML() {
-    return createTable()
+    return createTable(this.store.getState())
   }
 
   onInput(event) {

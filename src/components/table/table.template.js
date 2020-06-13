@@ -1,3 +1,5 @@
+import {createInlineStyles} from '@core/utils'
+
 const CODES = {
   A: 65,
   Z: 90
@@ -7,24 +9,28 @@ function createChar(num, code) {
   return String.fromCharCode(num + code)
 }
 
-function createCell(row, col, data) {
+function createCell(row, col, params) {
+  const {style} = params
   return `
     <div 
       class="cell" 
       contenteditable="" 
       data-component="cell"
       data-id=${row}:${col}
+      ${style}
     >
     </div>
   `
 }
 
-function createHeader(index, data) {
+function createHeader(index, params) {
+  const {style} = params
   return `
     <div 
       class="column" 
       data-type="resizable"
       data-col=${index}
+      ${style}
     >
       ${createChar(index, CODES.A)}
       <div 
@@ -34,9 +40,17 @@ function createHeader(index, data) {
 }
 
 function createElement(index, col, data) {
+  const width = data.colState[col]
+
+  let style = createInlineStyles({
+    width: width ? `${width}px` : null
+  })
+  if (style !== '') style = `style="${style}"`
+
+  const params = {style}
   return index ?
-      createCell(index - 1, col, data) :
-      createHeader(index, data)
+      createCell(index - 1, col, params) :
+      createHeader(col, params)
 }
 
 function createRow(index, colsCount, data) {
