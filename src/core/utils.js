@@ -9,7 +9,9 @@ export function createInlineStyles(styleObj) {
   let inlineStyle = ''
   for (const style in styleObj) {
     if (Object.prototype.hasOwnProperty.call(styleObj, style)) {
-      inlineStyle += ` ${getInlineStyleName(style)}: ${styleObj[style]};`
+      if (styleObj[style] !== null) {
+        inlineStyle += `${getInlineStyleName(style)}: ${styleObj[style]};`
+      }
     }
   }
   return inlineStyle
