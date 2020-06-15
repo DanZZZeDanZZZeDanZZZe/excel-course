@@ -10,7 +10,7 @@ function createChar(num, code) {
 }
 
 function createCell(row, col, params) {
-  const {style} = params
+  const {style, text} = params
   return `
     <div 
       class="cell" 
@@ -19,6 +19,7 @@ function createCell(row, col, params) {
       data-id=${row}:${col}
       ${style}
     >
+      ${text}
     </div>
   `
 }
@@ -41,12 +42,13 @@ function createHeader(index, params) {
 
 function createElement(index, col, data) {
   const width = data.colState[col]
+  const text = data.dataState[`${index - 1}:${col}`] || ''
 
   const style = createInlineStyles({
     width: width ? `${width}px` : null,
   })
 
-  const params = {style}
+  const params = {style, text}
   return index ?
       createCell(index - 1, col, params) :
       createHeader(col, params)
