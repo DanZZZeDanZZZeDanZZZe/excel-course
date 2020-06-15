@@ -68,6 +68,7 @@ export class Table extends ExcelComponent {
     this.selectCell($cell)
     this.$on('formula:input', text => {
       this.selection.$current.text(text)
+      this.updateTextInStore(text)
     })
     this.$on('formula:enter', () => {
       this.selection.$current.focus()
@@ -91,7 +92,14 @@ export class Table extends ExcelComponent {
     return createTable(this.store.getState())
   }
 
+  updateTextInStore(value) {
+    this.$dispatch(actions.changeText({
+      id: this.selection.$current.idStr,
+      value
+    }))
+  }
+
   onInput(event) {
-    this.$emit('table:input', $(event.target))
+    this.updateTextInStore($(event.target).text())
   }
 }

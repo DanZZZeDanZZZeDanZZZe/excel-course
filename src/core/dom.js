@@ -176,6 +176,10 @@ export class Dom {
     return this.$el.scrollTop
   }
 
+  get idStr() {
+    return this.$el.dataset.id
+  }
+
   getEl() {
     return this.$el
   }

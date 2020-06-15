@@ -40,8 +40,6 @@ function createHeader(index, params) {
 }
 
 function createElement(index, col, data) {
-  console.log('createElement -> data', data)
-
   const width = data.colState[col]
 
   const style = createInlineStyles({
