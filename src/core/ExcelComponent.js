@@ -12,6 +12,7 @@ export class ExcelComponent extends DomListener {
 
     this.name = options.name
     this.emitter = options.emitter
+    this.subscribe = options.subscribe || []
     this.store = options.store
     this.unsubscribers = []
     this.storeSub = null
@@ -28,12 +29,14 @@ export class ExcelComponent extends DomListener {
     this.unsubscribers.push(unsub)
   }
 
-  $dispatch(action) {
-    this.store.dispatch(action)
+  storeChanged(changes) {}
+
+  isWatching(key) {
+    return this.subscribe.includes(key)
   }
 
-  $subscribe(fn) {
-    this.storeSub = this.store.subscribe(fn)
+  $dispatch(action) {
+    this.store.dispatch(action)
   }
 
   prepare() {}
