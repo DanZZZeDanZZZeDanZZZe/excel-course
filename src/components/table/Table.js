@@ -36,6 +36,7 @@ export class Table extends ExcelComponent {
 
     if (isCell(event)) {
       const $target = $(event.target)
+      this.$emit('table:select', $target)
 
       if (event.shiftKey) {
         this.selection.selectGroup($target)
@@ -53,7 +54,6 @@ export class Table extends ExcelComponent {
 
     if (row >= 0 || col >= 0) {
       this.selectCell({row, col})
-      this.$emit('table:select', this.selection.$current)
     }
   }
 
@@ -82,7 +82,7 @@ export class Table extends ExcelComponent {
       const {row, col} = $cell
       this.selection.selectById(row, col)
     }
-    this.$emit('table:input', this.selection.$current)
+    this.$emit('table:select', this.selection.$current)
   }
 
   toHTML() {
