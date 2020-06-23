@@ -24,7 +24,12 @@ const jsLoaders = () => {
   ]
 
   if (isDev) {
-    loaders.push('eslint-loader')
+    loaders.push({
+      loader: 'eslint-loader',
+      options: {
+        configFile: path.resolve(__dirname, './.eslintrc')
+      }
+    })
   }
 
   return loaders
