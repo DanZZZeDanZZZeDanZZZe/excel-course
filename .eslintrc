@@ -6,9 +6,6 @@
     "node": true
   },
   "extends": ["eslint:recommended", "google"],
-  "parserOptions": {
-    "sourceType": "module"
-  },
   "rules": {
     "semi": "off",
     "arrow-parens": "off",
