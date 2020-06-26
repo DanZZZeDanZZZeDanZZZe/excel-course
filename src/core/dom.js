@@ -183,6 +183,13 @@ export class Dom {
   getEl() {
     return this.$el
   }
+
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s]
+      return res
+    }, {})
+  }
 }
 
 export function $(selector) {

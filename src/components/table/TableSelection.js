@@ -54,6 +54,10 @@ export class TableSelection {
     this.group.forEach(it => it.removeClass(TableSelection.className))
     this.group = []
   }
+
+  applyStyle(style) {
+    this.group.forEach($el => $el.css((style)))
+  }
 }
 
 function getIndexes($el) {
