@@ -1,4 +1,5 @@
 import {createInlineStyles} from '@core/utils'
+import {defaultStyles} from '../../constants'
 
 const CODES = {
   A: 65,
@@ -46,6 +47,7 @@ function createElement(index, col, data) {
 
   const style = createInlineStyles({
     width: width ? `${width}px` : null,
+    ...defaultStyles
   })
 
   const params = {style, text}

@@ -5,6 +5,7 @@ import {shouldResize, isCell, nextSelector} from './table.functions'
 import {TableSelection} from './TableSelection'
 import {$, Dom} from '@core/dom'
 import * as actions from '@/redux/actions'
+import {defaultStyles} from '../../constants'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
@@ -87,6 +88,10 @@ export class Table extends ExcelComponent {
       this.selection.selectById(row, col)
     }
     this.$emit('table:select', this.selection.$current)
+
+    const styles = this.selection.$current
+        .getStyles(Object.keys(defaultStyles))
+    this.$dispatch(actions.changeStyles(styles))
   }
 
   toHTML() {
