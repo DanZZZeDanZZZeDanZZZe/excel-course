@@ -47,8 +47,8 @@ export function createToolbar(state) {
       icon: 'format_underline',
       active: state['textDecoration'] === 'underline',
       value: {
-        ftextDecoration: state['textDecoration'] === 'underline'?
-            'normal' :
+        textDecoration: state['textDecoration'] === 'underline'?
+            'none' :
             'underline'
       }
     },
