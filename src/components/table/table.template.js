@@ -10,15 +10,20 @@ function createChar(num, code) {
   return String.fromCharCode(num + code)
 }
 
-function createCell(row, col, params) {
-  const {style, text} = params
+function createCell(row, col, params, data) {
+  let {style, text} = params
+  const id = `${row}:${col}`
+  style = style + createInlineStyles({
+    ...defaultStyles,
+    ...data.stylesState[id]
+  })
   return `
     <div 
       class="cell" 
       contenteditable="" 
       data-component="cell"
-      data-id=${row}:${col}
-      ${style}
+      data-id=${id}
+      style="${style}"
     >
       ${text}
     </div>
@@ -32,7 +37,7 @@ function createHeader(index, params) {
       class="column" 
       data-type="resizable"
       data-col=${index}
-      ${style}
+      style="${style}"
     >
       ${createChar(index, CODES.A)}
       <div 
@@ -44,15 +49,13 @@ function createHeader(index, params) {
 function createElement(index, col, data) {
   const width = data.colState[col]
   const text = data.dataState[`${index - 1}:${col}`] || ''
-
   const style = createInlineStyles({
-    width: width ? `${width}px` : null,
-    ...defaultStyles
+    width: width ? `${width}px` : null
   })
 
   const params = {style, text}
   return index ?
-      createCell(index - 1, col, params) :
+      createCell(index - 1, col, params, data) :
       createHeader(col, params)
 }
 
@@ -77,7 +80,7 @@ function createRow(index, colsCount, data) {
       data-type="resizable"
       data-component=${component}
       ${isRow ? 'data-row=' + index : ''}
-      ${style}
+      style="${style}"
     >
       <div class="row-info">
         ${isRow ? index: ''}

@@ -14,7 +14,7 @@ export function createInlineStyles(styleObj) {
       }
     }
   }
-  return inlineStyle !== '' ? `style="${inlineStyle}"` : ''
+  return inlineStyle
 }
 
 export function getInlineStyleName(camelCaseName) {
