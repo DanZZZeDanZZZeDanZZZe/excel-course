@@ -190,6 +190,14 @@ export class Dom {
       return res
     }, {})
   }
+
+  attr(name, value) {
+    if (typeof value === 'string') {
+      this.$el.setAttribute(name, value)
+      return this
+    }
+    return this.$el.getAttribute(name)
+  }
 }
 
 export function $(selector) {

@@ -1,5 +1,6 @@
 import {createInlineStyles} from '@core/utils'
 import {defaultStyles} from '../../constants'
+import {parse} from '../../core/parse'
 
 const CODES = {
   A: 65,
@@ -23,9 +24,10 @@ function createCell(row, col, params, data) {
       contenteditable="" 
       data-component="cell"
       data-id=${id}
+      data-text="${text || ''}"
       style="${style}"
     >
-      ${text}
+      ${parse(text)}
     </div>
   `
 }
