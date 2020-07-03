@@ -1,78 +1,110 @@
+import {createInlineStyles} from '@core/utils'
+import {defaultStyles} from '../../constants'
+import {parse} from '../../core/parse'
+
 const CODES = {
   A: 65,
   Z: 90
 }
 
-function createCell(row, col) {
+function createChar(num, code) {
+  return String.fromCharCode(num + code)
+}
+
+function createCell(row, col, params, data) {
+  let {style, text} = params
+  const id = `${row}:${col}`
+  style = style + createInlineStyles({
+    ...defaultStyles,
+    ...data.stylesState[id]
+  })
   return `
     <div 
       class="cell" 
       contenteditable="" 
       data-component="cell"
-      data-id=${row}:${col}
+      data-id=${id}
+      data-text="${text || ''}"
+      style="${style}"
     >
+      ${parse(text)}
     </div>
   `
 }
 
-function createCol(simb) {
+function createHeader(index, params) {
+  const {style} = params
   return `
-    <div class="column" data-type="resizable">
-      ${simb}
-      <div class="col-resize" data-resize="col"></div>
+    <div 
+      class="column" 
+      data-type="resizable"
+      data-col=${index}
+      style="${style}"
+    >
+      ${createChar(index, CODES.A)}
+      <div 
+        class="col-resize" data-resize="col"></div>
     </div>
   `
 }
 
-function createRow(index, cols) {
-  const resize = index ? '<div class="row-resize" data-resize="row"></div>' : ''
-  const component = index ? 'row' : 'headers'
+function createElement(index, col, data) {
+  const width = data.colState[col]
+  const text = data.dataState[`${index - 1}:${col}`] || ''
+  const style = createInlineStyles({
+    width: width ? `${width}px` : null
+  })
+
+  const params = {style, text}
+  return index ?
+      createCell(index - 1, col, params, data) :
+      createHeader(col, params)
+}
+
+function createRow(index, colsCount, data) {
+  const isRow = !!index
+  const resize = isRow ? '<div class="row-resize" data-resize="row"></div>' : ''
+  const component = isRow ? 'row' : 'headers'
+
+  const $elements = new Array(colsCount)
+      .fill(null)
+      .map((el, colIndex) => createElement(index, colIndex, data))
+      .join('')
+
+  const height = data.rowState[index]
+
+  const style = createInlineStyles({
+    height: height ? `${height}px` : null
+  })
+
   return `
     <div class="row" 
       data-type="resizable"
       data-component=${component}
+      ${isRow ? 'data-row=' + index : ''}
+      style="${style}"
     >
       <div class="row-info">
-        ${index ? index : ''}
+        ${isRow ? index: ''}
         ${resize}
       </div>
-      <div class="row-data">${cols}</div>
+      <div class="row-data">
+        ${$elements}
+      </div>
     </div>
   `
 }
 
-function createCols(codeStart, codeEnd, callback) {
-  const cols = []
-  for (let j = 0; j <= codeEnd - codeStart; j++) {
-    cols.push(callback(j, codeStart))
-  }
-  return cols.join('')
-}
-
-function createHeader(i, code) {
-  return createCol(String.fromCharCode(i + code))
-}
-
-function createColsInRange(callback) {
-  return createCols(CODES.A, CODES.Z, callback)
-}
-
-function createAFilledRow(i, callback) {
-  return createRow(i, createColsInRange(callback))
-}
-
-export function createTable(rowsCount = 15) {
-  const headers = createAFilledRow(null, createHeader)
-  const rows = []
-
-  for (let i = 0; i < rowsCount; i++) {
-    rows.push(createAFilledRow(i + 1, createCell.bind(null, i)))
-  }
+export function createTable(data, rowsCount = 15) {
+  const colsCount = CODES.Z - CODES.A
+  const rows = new Array(rowsCount + 1)
+      .fill(null)
+      .map((el, index) => createRow(index, colsCount, data))
 
   const logicEls = `
     <div class="vertical-line" data-line="vertical"></div>
     <div class="horizontal-line" data-line="horizontal"></div>
   `
 
-  return logicEls + headers + rows.join('')
+  return logicEls + rows.join('')
 }

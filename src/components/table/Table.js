@@ -4,6 +4,9 @@ import {resizeHandler} from './table.resize'
 import {shouldResize, isCell, nextSelector} from './table.functions'
 import {TableSelection} from './TableSelection'
 import {$, Dom} from '@core/dom'
+import * as actions from '@/redux/actions'
+import {defaultStyles} from '../../constants'
+import {parse} from '../../core/parse'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
@@ -19,13 +22,23 @@ export class Table extends ExcelComponent {
     })
   }
 
+  async resizeTable() {
+    try {
+      const data = await resizeHandler(event)
+      this.$dispatch(actions.tableResize(data))
+    } catch (e) {
+      console.warn('Resize error', e.message)
+    }
+  }
+
   onMousedown(event) {
     if (shouldResize(event)) {
-      resizeHandler(event)
+      this.resizeTable(event)
     }
 
     if (isCell(event)) {
       const $target = $(event.target)
+      this.$emit('table:select', $target)
 
       if (event.shiftKey) {
         this.selection.selectGroup($target)
@@ -43,7 +56,6 @@ export class Table extends ExcelComponent {
 
     if (row >= 0 || col >= 0) {
       this.selectCell({row, col})
-      this.$emit('table:select', this.selection.$current)
     }
   }
 
@@ -55,13 +67,23 @@ export class Table extends ExcelComponent {
     super.init()
 
     const $cell = this.$root.findData('id', '0:0')
-
     this.selectCell($cell)
     this.$on('formula:input', text => {
-      this.selection.$current.text(text)
+      this.selection.$current
+          .attr('data-text', text)
+          .text(parse(text))
+      this.updateTextInStore(text)
     })
     this.$on('formula:enter', () => {
       this.selection.$current.focus()
+    })
+
+    this.$on('toolbar:applyStyle', value => {
+      this.selection.applyStyle(value)
+      this.$dispatch(actions.applyStyle({
+        value,
+        ids: this.selection.selectedIds
+      }))
     })
   }
 
@@ -72,14 +94,25 @@ export class Table extends ExcelComponent {
       const {row, col} = $cell
       this.selection.selectById(row, col)
     }
-    this.$emit('table:input', this.selection.$current)
+    this.$emit('table:select', this.selection.$current)
+
+    const styles = this.selection.$current
+        .getStyles(Object.keys(defaultStyles))
+    this.$dispatch(actions.changeStyles(styles))
   }
 
   toHTML() {
-    return createTable()
+    return createTable(this.store.getState())
+  }
+
+  updateTextInStore(value) {
+    this.$dispatch(actions.changeText({
+      id: this.selection.$current.idStr,
+      value
+    }))
   }
 
   onInput(event) {
-    this.$emit('table:input', $(event.target))
+    this.updateTextInStore($(event.target).text())
   }
 }

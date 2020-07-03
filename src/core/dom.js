@@ -176,8 +176,27 @@ export class Dom {
     return this.$el.scrollTop
   }
 
+  get idStr() {
+    return this.$el.dataset.id
+  }
+
   getEl() {
     return this.$el
+  }
+
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s]
+      return res
+    }, {})
+  }
+
+  attr(name, value) {
+    if (typeof value === 'string') {
+      this.$el.setAttribute(name, value)
+      return this
+    }
+    return this.$el.getAttribute(name)
   }
 }
 
