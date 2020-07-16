@@ -20,11 +20,19 @@ export class ExcelPage extends Page {
 
     store.subscribe(stateListener)
 
-    const excel = new Excel('#app', {
+    this.excel = new Excel({
       components: [Header, Toolbar, Formula, Table],
       store
     })
 
-    return excel.getRoot()
+    return this.excel.getRoot()
+  }
+
+  afterRender() {
+    this.excel.init()
+  }
+
+  destroy() {
+    this.excel.destroy()
   }
 }
