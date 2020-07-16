@@ -22,10 +22,7 @@ export class Router {
 
   changePageHandler(event) {
     const Page = this.routes.excel
-    console.log('Router -> changePageHandler -> this.routes', this.routes)
-    console.log('Router -> changePageHandler -> Page', Page)
     const page = new Page()
-    console.log('Router -> changePageHandler -> page.getRoot()', page.getRoot())
     this.$placeholder.append(page.getRoot())
   }
 
