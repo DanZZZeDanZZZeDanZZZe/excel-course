@@ -1,13 +1,14 @@
+import {createStore} from '@core/createStore'
+import {Page} from '@core/Page'
+
 import {Excel} from '@/components/excel/Excel'
 import {Header} from '@/components/header/Header'
 import {Toolbar} from '@/components/toolbar/Toolbar'
 import {Formula} from '@/components/formula/Formula'
 import {Table} from '@/components/table/Table'
-import {createStore} from '@core/createStore'
 import {storage, debounce} from '@core/utils'
 import {rootReducer} from '@/redux/rootReducer'
 import {initialState} from '@/redux/initialState'
-import {Page} from '@/core/Page'
 
 export class ExcelPage extends Page {
   getRoot() {
@@ -24,6 +25,6 @@ export class ExcelPage extends Page {
       store
     })
 
-    excel.getRoot()
+    return excel.getRoot()
   }
 }

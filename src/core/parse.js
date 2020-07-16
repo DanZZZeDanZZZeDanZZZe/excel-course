@@ -1,5 +1,4 @@
 export function parse(value = '') {
-  console.log('parse -> value', value)
   if (value.startsWith('=')) {
     try {
       return eval(value.slice(1)) + ''
